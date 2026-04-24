@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Afloat",
+  "version": "1.0.0",
+  "description": "AI-powered onboarding co-pilot",
+  "action": {
+    "default_popup": "src/popup/index.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "side_panel": {
+    "default_path": "src/sidepanel/sidepanel.html"
+  },
+  "background": {
+    "service_worker": "src/background/background.js",
+    "type": "module"
+  },
+  "permissions": ["storage", "alarms", "sidePanel", "activeTab"],
+  "host_permissions": ["http://localhost:3001/*"],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
+}

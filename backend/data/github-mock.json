@@ -1,0 +1,11 @@
+{
+  "platform/src/auth/index.ts": [
+    { "name": "Alice Johnson", "githubUsername": "alicej", "lastCommitDate": "2026-04-20T10:30:00Z", "filePath": "src/auth/index.ts" },
+    { "name": "Bob Smith", "githubUsername": "bobsmith", "lastCommitDate": "2026-04-15T14:22:00Z", "filePath": "src/auth/index.ts" },
+    { "name": "Carol White", "githubUsername": "carolw", "lastCommitDate": "2026-04-10T09:15:00Z", "filePath": "src/auth/index.ts" }
+  ],
+  "platform/src/api/users.ts": [
+    { "name": "David Lee", "githubUsername": "davidlee", "lastCommitDate": "2026-04-22T16:45:00Z", "filePath": "src/api/users.ts" },
+    { "name": "Alice Johnson", "githubUsername": "alicej", "lastCommitDate": "2026-04-18T11:00:00Z", "filePath": "src/api/users.ts" }
+  ]
+}
