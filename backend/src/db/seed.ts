@@ -279,12 +279,12 @@ export async function runSeed() {
   // 2. Approved: Devon reviewed Alex (encouraging scores)
   insertPeerReview(db, sarahId, devonId, alexId, 'approved',
     ['3', '4', '3', 'Alex has grown a lot since joining. The rate limiter work shows real technical depth. Still ramping up but trajectory is very positive.', 'Alex asks great questions and is never afraid to admit when he\'s stuck. That kind of honesty makes the whole team better.'],
-    null);
+    undefined);
 
   // 3. Pending manager approval: Priyanka reviewed Devon
   insertPeerReview(db, sarahId, priyankaId, devonId, 'pending_manager',
     ['4', '3', '4', 'Devon\'s search feature is technically solid. The Elasticsearch query optimization was impressive.', 'Devon has really come into his own on the team. His feedback in code reviews has gotten much more direct and useful.'],
-    null);
+    undefined);
 
   // 4. Awaiting reviewer: Alex to review Tai (pending_reviewer — Alex has a pending review)
   insertPeerReview(db, sarahId, alexId, taiId, 'pending_reviewer', undefined, undefined);
@@ -303,7 +303,7 @@ export async function runSeed() {
   // 7. Approved: Sasha reviewed Rosa (very high scores)
   insertPeerReview(db, marcusId, sashaId, rosaId, 'approved',
     ['5', '5', '5', 'Rosa\'s WebSocket implementation is the best code I\'ve seen at this company. The load testing methodology was rigorous and the reconnection logic handles every edge case.', 'Rosa elevates everyone around her. She ran a knowledge-sharing session on WebSocket architecture that was incredibly valuable for the whole team.'],
-    null);
+    undefined);
 
   // 8. Pending reviewer: Miles to review Ben (Miles has a pending review to complete)
   insertPeerReview(db, marcusId, milesId, benId, 'pending_reviewer', undefined, undefined);
@@ -311,7 +311,7 @@ export async function runSeed() {
   // 9. Pending manager: Ben reviewed Rosa
   insertPeerReview(db, marcusId, benId, rosaId, 'pending_manager',
     ['5', '4', '5', 'Rosa is amazing. The WebSocket work is incredible and she\'s always willing to help.', 'Rosa is the most helpful person on the team. I would not have survived my first month without her.'],
-    null);
+    undefined);
 
   // Lina's team peer reviews
   // 10. Approved: Yemi reviewed Chloe
@@ -352,175 +352,6 @@ export async function runSeed() {
   console.log('    yemi@acme.com     — Yemi Adeyemi   (35d, solid performer)');
   console.log('    chloe@acme.com    — Chloe Marchand (55d, resolved human struggle, pending peer review)');
   console.log('    omar@acme.com     — Omar Shaikh    (10d, brand new)');
-
-  saveDb();
-}
-
-const QUESTIONS = JSON.stringify([
-  'slider:Customer Obsession',
-  'slider:Bias for Action',
-  'slider:Earn Trust',
-  'text:What technical work are you focused on this sprint, and where are you blocked?',
-  'text:How connected do you feel to your team and company culture right now?',
-]);
-
-function daysAgo(n: number) {
-  return new Date(Date.now() - n * 24 * 60 * 60 * 1000).toISOString();
-}
-
-export async function runSeed() {
-  const db = getDb();
-
-  const userCount = (db.prepare('SELECT COUNT(*) as count FROM users').get() as any).count;
-  if (userCount > 0) {
-    console.log('Database already seeded, skipping.');
-    return;
-  }
-
-  console.log('Seeding database...');
-
-  const pw = await bcrypt.hash('password123', 10);
-
-  // ── Managers ──────────────────────────────────────────────────────────────
-  const sarahId = uuidv4();
-  const marcusId = uuidv4();
-
-  db.prepare(`INSERT INTO users (id, email, name, password_hash, role, manager_id, start_date, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`)
-    .run(sarahId, 'sarah@acme.com', 'Sarah Chen', pw, 'Manager', null, '2021-03-15', daysAgo(0));
-
-  db.prepare(`INSERT INTO users (id, email, name, password_hash, role, manager_id, start_date, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`)
-    .run(marcusId, 'marcus@acme.com', 'Marcus Webb', pw, 'Manager', null, '2020-06-01', daysAgo(0));
-
-  // ── New Employees under Sarah ─────────────────────────────────────────────
-  const alexId = uuidv4();
-  const jordanId = uuidv4();
-  const priyankaId = uuidv4();
-  const devonId = uuidv4();
-
-  db.prepare(`INSERT INTO users (id, email, name, password_hash, role, manager_id, start_date, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`)
-    .run(alexId, 'alex@acme.com', 'Alex Rivera', pw, 'New_Employee', sarahId, daysAgo(30), daysAgo(0));
-
-  db.prepare(`INSERT INTO users (id, email, name, password_hash, role, manager_id, start_date, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`)
-    .run(jordanId, 'jordan@acme.com', 'Jordan Kim', pw, 'New_Employee', sarahId, daysAgo(14), daysAgo(0));
-
-  db.prepare(`INSERT INTO users (id, email, name, password_hash, role, manager_id, start_date, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`)
-    .run(priyankaId, 'priyanka@acme.com', 'Priyanka Nair', pw, 'New_Employee', sarahId, daysAgo(45), daysAgo(0));
-
-  db.prepare(`INSERT INTO users (id, email, name, password_hash, role, manager_id, start_date, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`)
-    .run(devonId, 'devon@acme.com', 'Devon Okafor', pw, 'New_Employee', sarahId, daysAgo(60), daysAgo(0));
-
-  // ── New Employees under Marcus ────────────────────────────────────────────
-  const sashaId = uuidv4();
-  const milesId = uuidv4();
-
-  db.prepare(`INSERT INTO users (id, email, name, password_hash, role, manager_id, start_date, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`)
-    .run(sashaId, 'sasha@acme.com', 'Sasha Petrov', pw, 'New_Employee', marcusId, daysAgo(21), daysAgo(0));
-
-  db.prepare(`INSERT INTO users (id, email, name, password_hash, role, manager_id, start_date, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`)
-    .run(milesId, 'miles@acme.com', 'Miles Thompson', pw, 'New_Employee', marcusId, daysAgo(7), daysAgo(0));
-
-  // ── Culture values ────────────────────────────────────────────────────────
-  const cv1Id = uuidv4();
-  const cv2Id = uuidv4();
-  const cv3Id = uuidv4();
-
-  db.prepare(`INSERT INTO culture_values (id, name, description) VALUES (?, ?, ?)`)
-    .run(cv1Id, 'Customer Obsession', 'Leaders start with the customer and work backwards. They work vigorously to earn and keep customer trust.');
-  db.prepare(`INSERT INTO culture_values (id, name, description) VALUES (?, ?, ?)`)
-    .run(cv2Id, 'Bias for Action', 'Speed matters in business. Many decisions and actions are reversible and do not need extensive study.');
-  db.prepare(`INSERT INTO culture_values (id, name, description) VALUES (?, ?, ?)`)
-    .run(cv3Id, 'Earn Trust', 'Leaders listen attentively, speak candidly, and treat others respectfully. They are vocally self-critical.');
-
-  // ── Culture champions ─────────────────────────────────────────────────────
-  db.prepare(`INSERT INTO culture_champions (id, user_id, culture_value_id, bio) VALUES (?, ?, ?, ?)`)
-    .run(uuidv4(), sarahId, cv1Id, 'Sarah has led multiple customer-facing initiatives and is passionate about customer-centric design.');
-  db.prepare(`INSERT INTO culture_champions (id, user_id, culture_value_id, bio) VALUES (?, ?, ?, ?)`)
-    .run(uuidv4(), sarahId, cv3Id, 'Sarah is known for her candid feedback and creating psychological safety in her teams.');
-  db.prepare(`INSERT INTO culture_champions (id, user_id, culture_value_id, bio) VALUES (?, ?, ?, ?)`)
-    .run(uuidv4(), marcusId, cv2Id, 'Marcus ships fast and teaches his team to make reversible decisions quickly rather than over-analyzing.');
-
-  // ── Check-in history for Alex (at-risk, low scores) ──────────────────────
-  const alexCheckin1 = uuidv4();
-  db.prepare(`INSERT INTO checkins (id, employee_id, status, due_at, completed_at, sentiment_score, struggle_type, questions, responses, routing, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-    .run(alexCheckin1, alexId, 'completed', daysAgo(28), daysAgo(27), 2.5, 'TECHNICAL',
-      QUESTIONS,
-      JSON.stringify(['2', '3', '2', 'I am blocked on ENG-4460 — not sure how the rate limiter middleware works or who owns it.', 'Team is friendly but I feel like I am missing context on a lot of decisions.']),
-      JSON.stringify({ struggleType: 'TECHNICAL', message: 'You seem to be facing some technical blockers.', kbAnswers: [], githubContacts: [] }),
-      daysAgo(28));
-
-  const alexCheckin2 = uuidv4();
-  db.prepare(`INSERT INTO checkins (id, employee_id, status, due_at, completed_at, sentiment_score, struggle_type, questions, responses, routing, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-    .run(alexCheckin2, alexId, 'completed', daysAgo(14), daysAgo(13), 3.2, 'NONE',
-      QUESTIONS,
-      JSON.stringify(['3', '4', '3', 'Made good progress on ENG-4460. Got unblocked after pairing with Sasha.', 'Feeling more connected after the team lunch last week.']),
-      JSON.stringify({ struggleType: 'NONE', message: 'Great progress this sprint!', kbAnswers: [], githubContacts: [] }),
-      daysAgo(14));
-
-  // Pending check-in for Alex (due now)
-  db.prepare(`INSERT INTO checkins (id, employee_id, status, due_at, questions, created_at) VALUES (?, ?, ?, ?, ?, ?)`)
-    .run(uuidv4(), alexId, 'pending', daysAgo(0), QUESTIONS, daysAgo(0));
-
-  // ── Check-in history for Priyanka (doing well) ────────────────────────────
-  const priyankaCheckin1 = uuidv4();
-  db.prepare(`INSERT INTO checkins (id, employee_id, status, due_at, completed_at, sentiment_score, struggle_type, questions, responses, routing, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-    .run(priyankaCheckin1, priyankaId, 'completed', daysAgo(42), daysAgo(41), 4.1, 'NONE',
-      QUESTIONS,
-      JSON.stringify(['4', '5', '4', 'Shipped DS-112 card components ahead of schedule. Really enjoying the design system work.', 'Loving the team. Had a great 1:1 with Sarah this week.']),
-      JSON.stringify({ struggleType: 'NONE', message: 'You are thriving!', kbAnswers: [], githubContacts: [] }),
-      daysAgo(42));
-
-  const priyankaCheckin2 = uuidv4();
-  db.prepare(`INSERT INTO checkins (id, employee_id, status, due_at, completed_at, sentiment_score, struggle_type, questions, responses, routing, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-    .run(priyankaCheckin2, priyankaId, 'completed', daysAgo(28), daysAgo(27), 4.4, 'NONE',
-      QUESTIONS,
-      JSON.stringify(['5', '4', '5', 'PRD-001 is moving fast. Collaborating well with Marcus on the WebSocket spec.', 'Feel very connected. Presented at the all-hands and got great feedback.']),
-      JSON.stringify({ struggleType: 'NONE', message: 'Excellent sprint!', kbAnswers: [], githubContacts: [] }),
-      daysAgo(28));
-
-  // ── Check-in history for Devon (human struggle) ───────────────────────────
-  const devonCheckin1 = uuidv4();
-  db.prepare(`INSERT INTO checkins (id, employee_id, status, due_at, completed_at, sentiment_score, struggle_type, questions, responses, routing, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-    .run(devonCheckin1, devonId, 'completed', daysAgo(56), daysAgo(55), 3.0, 'HUMAN',
-      QUESTIONS,
-      JSON.stringify(['3', '3', '2', 'Technical work is fine — making progress on PRD-002 search spec.', 'Struggling a bit with the team culture. Feedback style feels very blunt and I am not used to it.']),
-      JSON.stringify({ struggleType: 'HUMAN', message: 'It sounds like you may be adjusting to the team culture.', cultureChampions: [], kbAnswers: [] }),
-      daysAgo(56));
-
-  const devonCheckin2 = uuidv4();
-  db.prepare(`INSERT INTO checkins (id, employee_id, status, due_at, completed_at, sentiment_score, struggle_type, questions, responses, routing, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-    .run(devonCheckin2, devonId, 'completed', daysAgo(42), daysAgo(41), 3.5, 'NONE',
-      QUESTIONS,
-      JSON.stringify(['4', '3', '4', 'Search spec is approved. Starting implementation next sprint.', 'Had a good conversation with Sarah about feedback culture. Feeling better.']),
-      JSON.stringify({ struggleType: 'NONE', message: 'Good progress on both fronts.', kbAnswers: [], githubContacts: [] }),
-      daysAgo(42));
-
-  // ── Check-in history for Sasha (improving) ───────────────────────────────
-  const sashaCheckin1 = uuidv4();
-  db.prepare(`INSERT INTO checkins (id, employee_id, status, due_at, completed_at, sentiment_score, struggle_type, questions, responses, routing, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-    .run(sashaCheckin1, sashaId, 'completed', daysAgo(14), daysAgo(13), 3.8, 'TECHNICAL',
-      QUESTIONS,
-      JSON.stringify(['4', '4', '3', 'Working on ENG-4398 (Slack duplicate notifications). The Redis idempotency approach is clear but I need to understand the notification worker architecture better.', 'Team is great. Marcus is very supportive.']),
-      JSON.stringify({ struggleType: 'TECHNICAL', message: 'You have a clear path forward on ENG-4398.', kbAnswers: [], githubContacts: [] }),
-      daysAgo(14));
-
-  // ── GitHub mock data ──────────────────────────────────────────────────────
-  // (already in data/github-mock.json, no DB needed)
-
-  console.log('Seed complete. Demo credentials (all passwords: password123):');
-  console.log('');
-  console.log('  Managers:');
-  console.log('    sarah@acme.com    — Sarah Chen (manages Alex, Jordan, Priyanka, Devon)');
-  console.log('    marcus@acme.com   — Marcus Webb (manages Sasha, Miles)');
-  console.log('');
-  console.log('  New Employees (Sarah\'s team):');
-  console.log('    alex@acme.com     — Alex Rivera     (30 days in, pending check-in)');
-  console.log('    jordan@acme.com   — Jordan Kim      (14 days in)');
-  console.log('    priyanka@acme.com — Priyanka Nair   (45 days in, high performer)');
-  console.log('    devon@acme.com    — Devon Okafor    (60 days in, culture struggle resolved)');
-  console.log('');
-  console.log('  New Employees (Marcus\'s team):');
-  console.log('    sasha@acme.com    — Sasha Petrov    (21 days in)');
-  console.log('    miles@acme.com    — Miles Thompson  (7 days in, newest)');
 
   saveDb();
 }
