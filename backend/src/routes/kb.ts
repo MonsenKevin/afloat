@@ -72,7 +72,7 @@ router.post('/ask', async (req: Request, res: Response) => {
       }
     }
 
-    const result = await queryKB(question, checkinContext, history, isManager);
+    const result = await queryKB(question, checkinContext, history, isManager, user.orgId);
 
     if (!result || !result.answer) {
       return res.json({

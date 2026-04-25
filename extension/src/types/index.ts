@@ -1,4 +1,27 @@
 export type Role = 'New_Employee' | 'Manager';
+
+export type IntegrationProvider = 'jira' | 'github' | 'outlook' | 'google_calendar' | 'granola' | 'knowledge_base';
+export type IntegrationStatus = 'active' | 'disabled' | 'error';
+
+export interface IntegrationConfig {
+  id: string;
+  orgId: string;
+  provider: IntegrationProvider;
+  status: IntegrationStatus;
+  credentials: string; // always "••••••••" from API
+  lastSyncedAt: string | null;
+  errorMessage: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SourceDocument {
+  title: string;
+  section: string;
+  provider?: IntegrationProvider;
+  url?: string;
+  description?: string;
+}
 export type StruggleType = 'HUMAN' | 'TECHNICAL' | 'BOTH' | 'NONE';
 export type CheckInStatus = 'pending' | 'completed' | 'missed';
 

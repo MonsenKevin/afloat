@@ -2,6 +2,62 @@ export type Role = 'New_Employee' | 'Manager';
 export type StruggleType = 'HUMAN' | 'TECHNICAL' | 'BOTH' | 'NONE';
 export type CheckInStatus = 'pending' | 'completed' | 'missed';
 
+// Integration types
+export type IntegrationProvider = 'jira' | 'github' | 'outlook' | 'google_calendar' | 'granola' | 'knowledge_base';
+export type IntegrationStatus = 'active' | 'disabled' | 'error';
+
+export interface IndexedDocument {
+  id: string;
+  orgId: string;
+  provider: IntegrationProvider;
+  sourceId: string;
+  title: string;
+  content: string;
+  url: string;
+  fetchedAt: string;
+}
+
+export interface IntegrationConfig {
+  id: string;
+  orgId: string;
+  provider: IntegrationProvider;
+  status: IntegrationStatus;
+  encryptedCredentials: string;
+  lastSyncedAt: string | null;
+  errorMessage: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Per-provider credential interfaces
+export interface JiraCredentials {
+  baseUrl: string;
+  email: string;
+  apiToken: string;
+  projectKey: string;
+}
+
+export interface GitHubCredentials {
+  token: string;
+  repos: string[];
+}
+
+export interface OutlookCredentials {
+  accessToken: string;
+  refreshToken: string;
+  expiresAt: string;
+}
+
+export interface GoogleCalendarCredentials {
+  accessToken: string;
+  refreshToken: string;
+  expiresAt: string;
+}
+
+export interface GranolaCredentials {
+  apiKey: string;
+}
+
 export interface User {
   id: string;
   email: string;
@@ -74,6 +130,15 @@ export interface ClassificationResult {
   summary: string;
 }
 
+// Structured document entry used in StructuredAnswer.documents
+export interface StructuredDocument {
+  title: string;
+  section: string;
+  provider?: IntegrationProvider;
+  url?: string;
+  description?: string;
+}
+
 // Express request augmentation (backend only)
 declare global {
   namespace Express {
@@ -82,6 +147,7 @@ declare global {
         id: string;
         role: Role;
         managerId: string | null;
+        orgId: string;
       };
     }
   }

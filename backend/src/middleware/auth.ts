@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyToken } from '../services/auth';
+import { getDb } from '../db';
 
 export function requireAuth(req: Request, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;
@@ -9,7 +10,14 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
   const token = authHeader.slice(7);
   try {
     const payload = verifyToken(token);
-    req.user = { id: payload.id, role: payload.role, managerId: payload.managerId };
+    const db = getDb();
+    const userRow = db.prepare('SELECT org_id FROM users WHERE id = ?').get(payload.id) as { org_id: string } | undefined;
+    req.user = {
+      id: payload.id,
+      role: payload.role,
+      managerId: payload.managerId,
+      orgId: userRow?.org_id ?? 'default',
+    };
     return next();
   } catch (err) {
     return res.status(401).json({ error: 'Token expired or invalid' });

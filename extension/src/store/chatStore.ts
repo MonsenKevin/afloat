@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { ContactSuggestion } from '../types/index';
+import { ContactSuggestion, SourceDocument } from '../types/index';
 import apiClient from '../api/client';
 
 export interface ChatMessage {
@@ -9,7 +9,8 @@ export interface ChatMessage {
   type?: 'text' | 'kb_answer' | 'github_contacts';
   data?: {
     contacts?: { name: string; email?: string; reason: string }[];
-    documents?: { title: string; section: string }[];
+    primaryDoc?: SourceDocument | null;
+    documents?: SourceDocument[];
     githubContacts?: ContactSuggestion[];
     citation?: string;
   };
@@ -88,6 +89,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
             type: 'kb_answer',
             data: {
               contacts: res.data.contacts || [],
+              primaryDoc: res.data.primaryDoc ?? null,
               documents: res.data.documents || [],
             },
           });

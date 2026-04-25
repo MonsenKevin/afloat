@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 type DisplayMode = 'popup' | 'sidepanel';
-type ActiveTab = 'chat' | 'dashboard' | 'manager';
+type ActiveTab = 'chat' | 'dashboard' | 'manager' | 'integrations';
 
 interface UIState {
   displayMode: DisplayMode;

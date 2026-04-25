@@ -45,6 +45,153 @@ function ContactList({ contacts }: { contacts: ContactSuggestion[] }) {
   );
 }
 
+// ── Provider icons ────────────────────────────────────────────────────────────
+function ProviderIcon({ provider }: { provider: string }) {
+  switch (provider) {
+    case 'jira':
+      return (
+        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 12, height: 12, borderRadius: 2, background: '#0052CC', color: '#fff', fontSize: 8, fontWeight: 700, lineHeight: 1, flexShrink: 0 }}>
+          J
+        </span>
+      );
+    case 'github':
+      return (
+        <svg style={{ width: 12, height: 12, flexShrink: 0 }} fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+        </svg>
+      );
+    case 'outlook':
+      return (
+        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 12, height: 12, borderRadius: 2, background: '#0078D4', color: '#fff', fontSize: 8, fontWeight: 700, lineHeight: 1, flexShrink: 0 }}>
+          O
+        </span>
+      );
+    case 'google_calendar':
+      return (
+        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 12, height: 12, borderRadius: 2, background: '#EA4335', color: '#fff', fontSize: 8, fontWeight: 700, lineHeight: 1, flexShrink: 0 }}>
+          G
+        </span>
+      );
+    case 'granola':
+      return (
+        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 12, height: 12, borderRadius: 2, background: '#22c55e', color: '#fff', fontSize: 8, fontWeight: 700, lineHeight: 1, flexShrink: 0 }}>
+          G
+        </span>
+      );
+    default:
+      // knowledge_base or undefined
+      return (
+        <svg style={{ width: 10, height: 10, flexShrink: 0 }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+      );
+  }
+}
+
+const PROVIDER_LABELS: Record<string, string> = {
+  jira: 'Jira',
+  github: 'GitHub',
+  outlook: 'Outlook',
+  google_calendar: 'Google Calendar',
+  granola: 'Granola',
+  knowledge_base: 'Knowledge Base',
+};
+
+function isIntegrationProvider(provider: string) {
+  return provider !== 'knowledge_base';
+}
+
+// ── Source chips grouped by provider ─────────────────────────────────────────
+function SourceChips({ documents }: { documents: Array<{ title: string; section?: string; provider?: string; url?: string }> }) {
+  // Group documents by provider (default to 'knowledge_base')
+  const groups = new Map<string, typeof documents>();
+  for (const doc of documents) {
+    const key = doc.provider ?? 'knowledge_base';
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key)!.push(doc);
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+      <p style={{ fontSize: 11, fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em', margin: 0 }}>Sources</p>
+      {Array.from(groups.entries()).map(([provider, docs]) => {
+        const isIntegration = isIntegrationProvider(provider);
+        const chipStyle: React.CSSProperties = isIntegration
+          ? { background: '#f0f9ff', border: '1px solid #bae6fd', color: '#0369a1' }
+          : { background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#15803d' };
+
+        return (
+          <div key={provider} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            <p style={{ fontSize: 10, fontWeight: 600, color: '#9ca3af', margin: 0, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              {PROVIDER_LABELS[provider] ?? provider}
+            </p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              {docs.map((d, i) => {
+                const label = `${d.title}${d.section ? ` › ${d.section}` : ''}`;
+                return (
+                  <span
+                    key={i}
+                    style={{
+                      display: 'inline-flex', alignItems: 'center', gap: 4,
+                      borderRadius: 20, padding: '3px 10px', fontSize: 11, fontWeight: 500,
+                      ...chipStyle,
+                    }}
+                  >
+                    <ProviderIcon provider={provider} />
+                    {d.url ? (
+                      <a
+                        href={d.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        style={{ color: '#15803d', textDecoration: 'none' }}
+                      >
+                        {label}
+                      </a>
+                    ) : (
+                      label
+                    )}
+                  </span>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// ── Primary doc card ──────────────────────────────────────────────────────────
+function PrimaryDocCard({ doc }: { doc: { title: string; section?: string; provider?: string; url?: string; description?: string } }) {
+  const isIntegration = doc.provider && doc.provider !== 'knowledge_base';
+  const bg = isIntegration ? '#f0f9ff' : '#f0fdf4';
+  const border = isIntegration ? '#bae6fd' : '#bbf7d0';
+  const accent = isIntegration ? '#0369a1' : '#15803d';
+
+  return (
+    <div style={{ background: bg, border: `1px solid ${border}`, borderRadius: 10, padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 4 }}>
+      <p style={{ fontSize: 10, fontWeight: 700, color: accent, textTransform: 'uppercase', letterSpacing: '0.05em', margin: 0 }}>
+        Start here
+      </p>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+        <ProviderIcon provider={doc.provider ?? 'knowledge_base'} />
+        {doc.url ? (
+          <a href={doc.url} target="_blank" rel="noreferrer" style={{ fontSize: 13, fontWeight: 600, color: accent, textDecoration: 'none' }}>
+            {doc.title}{doc.section ? ` › ${doc.section}` : ''}
+          </a>
+        ) : (
+          <span style={{ fontSize: 13, fontWeight: 600, color: accent }}>
+            {doc.title}{doc.section ? ` › ${doc.section}` : ''}
+          </span>
+        )}
+      </div>
+      {doc.description && (
+        <p style={{ fontSize: 12, color: '#374151', margin: 0, lineHeight: 1.4 }}>{doc.description}</p>
+      )}
+    </div>
+  );
+}
+
 // ── Message bubble ────────────────────────────────────────────────────────────
 function MessageBubble({ msg }: { msg: ChatMessage }) {
   const isUser = msg.role === 'user';
@@ -62,6 +209,12 @@ function MessageBubble({ msg }: { msg: ChatMessage }) {
   const contacts = msg.data?.contacts || [];
   const documents = msg.data?.documents || [];
   const githubContacts = msg.data?.githubContacts || [];
+  const primaryDoc = msg.data?.primaryDoc;
+
+  // Filter out the primaryDoc from the additional sources list to avoid duplication
+  const additionalDocs = primaryDoc
+    ? documents.filter(d => d.title !== primaryDoc.title)
+    : documents;
 
   return (
     <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: 10 }}>
@@ -71,10 +224,15 @@ function MessageBubble({ msg }: { msg: ChatMessage }) {
           {msg.content}
         </div>
 
-        {/* Contact chips */}
+        {/* Primary doc — "Start here" card */}
+        {primaryDoc && primaryDoc.title && (
+          <PrimaryDocCard doc={primaryDoc} />
+        )}
+
+        {/* Contact cards */}
         {contacts.length > 0 && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-            <p style={{ fontSize: 11, fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em', margin: 0 }}>People to talk to</p>
+            <p style={{ fontSize: 11, fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em', margin: 0 }}>Reach out to</p>
             {contacts.map((c, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, background: '#fff', border: '1px solid #e0f2fe', borderRadius: 10, padding: '8px 10px' }}>
                 <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#bae6fd', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 12, fontWeight: 700, color: '#0369a1' }}>
@@ -94,21 +252,9 @@ function MessageBubble({ msg }: { msg: ChatMessage }) {
           </div>
         )}
 
-        {/* Document chips */}
-        {documents.length > 0 && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-            <p style={{ fontSize: 11, fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em', margin: 0 }}>Sources</p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-              {documents.map((d, i) => (
-                <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 20, padding: '3px 10px', fontSize: 11, color: '#15803d', fontWeight: 500 }}>
-                  <svg style={{ width: 10, height: 10 }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  {d.title}{d.section ? ` › ${d.section}` : ''}
-                </span>
-              ))}
-            </div>
-          </div>
+        {/* Additional sources (collapsed chips) */}
+        {additionalDocs.length > 0 && (
+          <SourceChips documents={additionalDocs} />
         )}
 
         {/* GitHub contacts */}
