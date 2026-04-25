@@ -153,8 +153,96 @@ router.post('/:id/submit', async (req: Request, res: Response) => {
   }
 });
 
-// GET /api/checkins/history
-// Returns completed check-ins ordered by completed_at desc
+// GET /api/checkins/peer-reviews/pending — get pending peer reviews for this reviewer
+router.get('/peer-reviews/pending', (req: Request, res: Response) => {
+  try {
+    const db = getDb();
+    const reviewerId = req.user!.id;
+
+    const rows = db.prepare(`
+      SELECT pr.*, su.name as subject_name
+      FROM peer_reviews pr
+      JOIN users su ON pr.subject_id = su.id
+      WHERE pr.reviewer_id = ? AND pr.status = 'pending_reviewer'
+      ORDER BY pr.created_at DESC
+    `).all(reviewerId) as any[];
+
+    const peerReviews = rows.map(row => ({
+      id: row.id,
+      reviewerId: row.reviewer_id,
+      subjectId: row.subject_id,
+      subjectName: row.subject_name,
+      status: row.status,
+      questions: JSON.parse(row.questions || '[]'),
+      responses: row.responses ? JSON.parse(row.responses) : null,
+      managerNotes: row.manager_notes || null,
+      createdAt: row.created_at,
+    }));
+
+    return res.json({ peerReviews });
+  } catch (err) {
+    console.error('GET /checkins/peer-reviews/pending error:', err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// POST /api/checkins/peer-reviews/:id/submit — reviewer submits responses
+router.post('/peer-reviews/:id/submit', (req: Request, res: Response) => {
+  try {
+    const db = getDb();
+    const reviewerId = req.user!.id;
+    const { responses } = req.body;
+
+    if (!responses || !Array.isArray(responses)) {
+      return res.status(400).json({ error: 'responses array is required' });
+    }
+
+    const review = db.prepare(`
+      SELECT * FROM peer_reviews WHERE id = ? AND reviewer_id = ?
+    `).get(req.params.id, reviewerId) as any;
+
+    if (!review) {
+      return res.status(404).json({ error: 'Peer review not found' });
+    }
+    if (review.status !== 'pending_reviewer') {
+      return res.status(400).json({ error: 'Peer review is not pending your response' });
+    }
+
+    const now = new Date().toISOString();
+    db.prepare(`
+      UPDATE peer_reviews
+      SET status = 'pending_manager', responses = ?, completed_at = ?
+      WHERE id = ?
+    `).run(JSON.stringify(responses), now, req.params.id);
+
+    saveDb();
+
+    const updated = db.prepare('SELECT * FROM peer_reviews WHERE id = ?').get(req.params.id) as any;
+    return res.json({
+      peerReview: {
+        id: updated.id,
+        reviewerId: updated.reviewer_id,
+        subjectId: updated.subject_id,
+        status: updated.status,
+        questions: JSON.parse(updated.questions || '[]'),
+        responses: updated.responses ? JSON.parse(updated.responses) : null,
+        managerNotes: updated.manager_notes || null,
+        createdAt: updated.created_at,
+        completedAt: updated.completed_at || null,
+      }
+    });
+  } catch (err) {
+    console.error('POST /checkins/peer-reviews/:id/submit error:', err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// GET /api/checkins/peer-reviews/received — blocked: peer review feedback is manager-only
+router.get('/peer-reviews/received', (req: Request, res: Response) => {
+  return res.status(403).json({ error: 'Peer review feedback is not available to subjects' });
+});
+
+
 router.get('/history', (req: Request, res: Response) => {
   try {
     const db = getDb();
@@ -260,15 +348,14 @@ async function buildRoutingResult(
   }
 
   if (struggleType === 'TECHNICAL' || struggleType === 'BOTH') {
-    // Query KB using the summary
     try {
-      const kbAnswers = await queryKB(summary);
-      routing.kbAnswers = kbAnswers;
+      const result = await queryKB(summary);
+      // Convert StructuredAnswer to KBAnswer[] for routing
+      routing.kbAnswers = result ? [{ answer: result.answer, citation: result.documents.map(d => `${d.title} > ${d.section}`).join(', ') || '', confidence: 1 }] : [];
     } catch (err) {
       console.error('KB query error during routing:', err);
       routing.kbAnswers = [];
     }
-    // GitHub contacts left empty — user can ask in chat
     routing.githubContacts = [];
   }
 

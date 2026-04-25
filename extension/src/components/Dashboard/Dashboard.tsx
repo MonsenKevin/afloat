@@ -49,12 +49,11 @@ export default function Dashboard() {
     const load = async () => {
       try {
         const res = await apiClient.get('/api/checkins/history');
-        setHistory((res.data.history as HistoryEntry[]) || []);
+        setHistory((res.data.checkins as HistoryEntry[]) || []);
       } catch {
         // ignore
-      } finally {
-        setIsLoading(false);
       }
+      setIsLoading(false);
     };
     void load();
   }, []);
@@ -194,14 +193,24 @@ export default function Dashboard() {
 
               {isOpen && (
                 <div className="px-3 pb-3 bg-gray-50 border-t border-gray-100 space-y-2">
-                  {entry.questions.map((q, i) => (
-                    <div key={i} className="pt-2">
-                      <p className="text-xs font-medium text-gray-500 mb-0.5">{q}</p>
-                      <p className="text-xs text-gray-700 leading-relaxed">
-                        {entry.responses?.[i] || '—'}
-                      </p>
-                    </div>
-                  ))}
+                  {entry.questions.map((q, i) => {
+                    const label = q.startsWith('slider:')
+                      ? `${q.slice(7)} (rated ${entry.responses?.[i] ?? '—'}/5)`
+                      : q.startsWith('text:')
+                      ? q.slice(5)
+                      : q;
+                    const response = q.startsWith('slider:')
+                      ? null  // shown inline in label
+                      : entry.responses?.[i] || '—';
+                    return (
+                      <div key={i} className="pt-2">
+                        <p className="text-xs font-medium text-gray-500 mb-0.5">{label}</p>
+                        {response && (
+                          <p className="text-xs text-gray-700 leading-relaxed">{response}</p>
+                        )}
+                      </div>
+                    );
+                  })}
 
                   {/* Note section */}
                   <div className="pt-2 border-t border-gray-200">

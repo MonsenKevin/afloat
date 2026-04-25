@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { ContactSuggestion, KBAnswer } from '../types/index';
+import { ContactSuggestion } from '../types/index';
 import apiClient from '../api/client';
 
 export interface ChatMessage {
@@ -7,7 +7,12 @@ export interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
   type?: 'text' | 'kb_answer' | 'github_contacts';
-  data?: KBAnswer | ContactSuggestion[];
+  data?: {
+    contacts?: { name: string; email?: string; reason: string }[];
+    documents?: { title: string; section: string }[];
+    githubContacts?: ContactSuggestion[];
+    citation?: string;
+  };
   timestamp: string;
 }
 
@@ -17,12 +22,19 @@ interface ChatState {
   addMessage: (msg: Omit<ChatMessage, 'id' | 'timestamp'>) => void;
   sendMessage: (text: string) => Promise<void>;
   clearMessages: () => void;
-  restoreMessages: () => Promise<void>;
+  restoreMessages: (userId: string) => Promise<void>;
+}
+
+function storageKey(userId: string) {
+  return `afloat_messages_${userId}`;
 }
 
 function isFilePath(text: string): boolean {
   return /[/\\]/.test(text) || /\.(ts|tsx|js|jsx|py|go|java|rb|rs|cpp|c|h)$/.test(text) || text.startsWith('src/');
 }
+
+// Track current user ID for storage key
+let currentUserId = '';
 
 export const useChatStore = create<ChatState>((set, get) => ({
   messages: [],
@@ -36,7 +48,9 @@ export const useChatStore = create<ChatState>((set, get) => ({
     };
     const messages = [...get().messages, newMsg];
     set({ messages });
-    chrome.storage.local.set({ afloat_messages: JSON.stringify(messages) });
+    if (currentUserId) {
+      chrome.storage.local.set({ [storageKey(currentUserId)]: JSON.stringify(messages) });
+    }
   },
 
   sendMessage: async (text) => {
@@ -58,22 +72,29 @@ export const useChatStore = create<ChatState>((set, get) => ({
             role: 'assistant',
             content: `Found ${contacts.length} contributor(s) for \`${filePath}\`:`,
             type: 'github_contacts',
-            data: contacts,
+            data: { githubContacts: contacts },
           });
         }
       } else {
-        const res = await apiClient.post('/api/kb/ask', { question: text });
-        if (res.data.answers && res.data.answers.length > 0) {
+        const history = get().messages
+          .slice(-6)
+          .map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`)
+          .join('\n');
+        const res = await apiClient.post('/api/kb/ask', { question: text, history });
+        if (res.data.answer) {
           addMessage({
             role: 'assistant',
-            content: res.data.answers[0].answer as string,
+            content: res.data.answer as string,
             type: 'kb_answer',
-            data: res.data.answers[0] as KBAnswer,
+            data: {
+              contacts: res.data.contacts || [],
+              documents: res.data.documents || [],
+            },
           });
         } else {
           addMessage({
             role: 'assistant',
-            content: (res.data.message as string) || 'No relevant documents found. Consider asking a teammate.',
+            content: (res.data.message as string) || 'No relevant information found. Consider asking a teammate.',
             type: 'text',
           });
         }
@@ -87,17 +108,23 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
   clearMessages: () => {
     set({ messages: [] });
-    chrome.storage.local.remove(['afloat_messages']);
+    if (currentUserId) {
+      chrome.storage.local.remove([storageKey(currentUserId)]);
+    }
   },
 
-  restoreMessages: async () => {
+  restoreMessages: async (userId: string) => {
+    currentUserId = userId;
     try {
-      const result = await chrome.storage.local.get(['afloat_messages']);
-      if (result.afloat_messages) {
-        set({ messages: JSON.parse(result.afloat_messages as string) as ChatMessage[] });
+      const key = storageKey(userId);
+      const result = await chrome.storage.local.get([key]);
+      if (result[key]) {
+        set({ messages: JSON.parse(result[key] as string) as ChatMessage[] });
+      } else {
+        set({ messages: [] });
       }
     } catch {
-      // ignore
+      set({ messages: [] });
     }
   },
 }));

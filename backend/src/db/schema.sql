@@ -55,3 +55,18 @@ CREATE TABLE IF NOT EXISTS manager_notifications (
   is_read     INTEGER NOT NULL DEFAULT 0,
   created_at  TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS peer_reviews (
+  id              TEXT PRIMARY KEY,
+  manager_id      TEXT NOT NULL REFERENCES users(id),
+  reviewer_id     TEXT NOT NULL REFERENCES users(id),
+  subject_id      TEXT NOT NULL REFERENCES users(id),
+  status          TEXT NOT NULL DEFAULT 'pending_reviewer',
+  -- 'pending_reviewer' | 'pending_manager' | 'approved'
+  questions       TEXT NOT NULL,  -- JSON array, same format as checkins
+  responses       TEXT,           -- JSON array, filled by reviewer
+  manager_notes   TEXT,           -- manager's optional edit/note before delivery
+  created_at      TEXT NOT NULL,
+  completed_at    TEXT,           -- when reviewer submitted
+  approved_at     TEXT            -- when manager approved
+);

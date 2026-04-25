@@ -1,11 +1,115 @@
 {
   "platform/src/auth/index.ts": [
-    { "name": "Alice Johnson", "githubUsername": "alicej", "lastCommitDate": "2026-04-20T10:30:00Z", "filePath": "src/auth/index.ts" },
-    { "name": "Bob Smith", "githubUsername": "bobsmith", "lastCommitDate": "2026-04-15T14:22:00Z", "filePath": "src/auth/index.ts" },
-    { "name": "Carol White", "githubUsername": "carolw", "lastCommitDate": "2026-04-10T09:15:00Z", "filePath": "src/auth/index.ts" }
+    { "name": "Sasha Petrov", "githubUsername": "sasha-petrov", "lastCommitDate": "2026-04-22T14:30:00Z", "filePath": "src/auth/index.ts" },
+    { "name": "Marcus Webb", "githubUsername": "marcuswebb", "lastCommitDate": "2026-04-10T09:15:00Z", "filePath": "src/auth/index.ts" },
+    { "name": "Rosa Delgado", "githubUsername": "rosadelgado", "lastCommitDate": "2026-03-28T16:45:00Z", "filePath": "src/auth/index.ts" }
+  ],
+  "platform/src/auth/jwt.ts": [
+    { "name": "Sasha Petrov", "githubUsername": "sasha-petrov", "lastCommitDate": "2026-04-23T10:00:00Z", "filePath": "src/auth/jwt.ts" },
+    { "name": "Marcus Webb", "githubUsername": "marcuswebb", "lastCommitDate": "2026-03-15T11:30:00Z", "filePath": "src/auth/jwt.ts" }
   ],
   "platform/src/api/users.ts": [
-    { "name": "David Lee", "githubUsername": "davidlee", "lastCommitDate": "2026-04-22T16:45:00Z", "filePath": "src/api/users.ts" },
-    { "name": "Alice Johnson", "githubUsername": "alicej", "lastCommitDate": "2026-04-18T11:00:00Z", "filePath": "src/api/users.ts" }
+    { "name": "Devon Okafor", "githubUsername": "devonokafor", "lastCommitDate": "2026-04-23T11:00:00Z", "filePath": "src/api/users.ts" },
+    { "name": "Marcus Webb", "githubUsername": "marcuswebb", "lastCommitDate": "2026-04-18T10:00:00Z", "filePath": "src/api/users.ts" },
+    { "name": "Jordan Kim", "githubUsername": "jordankim", "lastCommitDate": "2026-04-05T14:00:00Z", "filePath": "src/api/users.ts" }
+  ],
+  "platform/src/api/transactions.ts": [
+    { "name": "Devon Okafor", "githubUsername": "devonokafor", "lastCommitDate": "2026-04-24T09:30:00Z", "filePath": "src/api/transactions.ts" },
+    { "name": "Ben Hartley", "githubUsername": "benhartley", "lastCommitDate": "2026-04-20T16:00:00Z", "filePath": "src/api/transactions.ts" },
+    { "name": "Marcus Webb", "githubUsername": "marcuswebb", "lastCommitDate": "2026-04-01T10:00:00Z", "filePath": "src/api/transactions.ts" }
+  ],
+  "platform/src/middleware/rateLimiter.ts": [
+    { "name": "Alex Rivera", "githubUsername": "alexrivera", "lastCommitDate": "2026-04-24T08:20:00Z", "filePath": "src/middleware/rateLimiter.ts" },
+    { "name": "Sasha Petrov", "githubUsername": "sasha-petrov", "lastCommitDate": "2026-04-20T15:30:00Z", "filePath": "src/middleware/rateLimiter.ts" },
+    { "name": "Marcus Webb", "githubUsername": "marcuswebb", "lastCommitDate": "2026-04-05T12:00:00Z", "filePath": "src/middleware/rateLimiter.ts" }
+  ],
+  "platform/src/middleware/auth.ts": [
+    { "name": "Sasha Petrov", "githubUsername": "sasha-petrov", "lastCommitDate": "2026-04-22T11:00:00Z", "filePath": "src/middleware/auth.ts" },
+    { "name": "Rosa Delgado", "githubUsername": "rosadelgado", "lastCommitDate": "2026-04-18T14:00:00Z", "filePath": "src/middleware/auth.ts" }
+  ],
+  "platform/src/middleware/logging.ts": [
+    { "name": "Jordan Kim", "githubUsername": "jordankim", "lastCommitDate": "2026-04-23T15:00:00Z", "filePath": "src/middleware/logging.ts" },
+    { "name": "Devon Okafor", "githubUsername": "devonokafor", "lastCommitDate": "2026-04-10T09:00:00Z", "filePath": "src/middleware/logging.ts" }
+  ],
+  "platform/src/notifications/worker.ts": [
+    { "name": "Sasha Petrov", "githubUsername": "sasha-petrov", "lastCommitDate": "2026-04-21T17:00:00Z", "filePath": "src/notifications/worker.ts" },
+    { "name": "Priyanka Nair", "githubUsername": "priyankanair", "lastCommitDate": "2026-04-12T14:00:00Z", "filePath": "src/notifications/worker.ts" },
+    { "name": "Rosa Delgado", "githubUsername": "rosadelgado", "lastCommitDate": "2026-03-30T10:00:00Z", "filePath": "src/notifications/worker.ts" }
+  ],
+  "platform/src/notifications/slack.ts": [
+    { "name": "Sasha Petrov", "githubUsername": "sasha-petrov", "lastCommitDate": "2026-04-22T09:00:00Z", "filePath": "src/notifications/slack.ts" },
+    { "name": "Miles Thompson", "githubUsername": "milesthompson", "lastCommitDate": "2026-04-15T11:00:00Z", "filePath": "src/notifications/slack.ts" }
+  ],
+  "platform/src/notifications/email.ts": [
+    { "name": "Yemi Adeyemi", "githubUsername": "yemiadeyemi", "lastCommitDate": "2026-04-20T13:00:00Z", "filePath": "src/notifications/email.ts" },
+    { "name": "Chloe Marchand", "githubUsername": "chloemarchand", "lastCommitDate": "2026-04-08T10:00:00Z", "filePath": "src/notifications/email.ts" }
+  ],
+  "platform/src/dashboard/components/Card.tsx": [
+    { "name": "Priyanka Nair", "githubUsername": "priyankanair", "lastCommitDate": "2026-04-23T16:00:00Z", "filePath": "src/dashboard/components/Card.tsx" },
+    { "name": "Devon Okafor", "githubUsername": "devonokafor", "lastCommitDate": "2026-04-15T11:30:00Z", "filePath": "src/dashboard/components/Card.tsx" },
+    { "name": "Tai Nguyen", "githubUsername": "tainguyen", "lastCommitDate": "2026-04-08T09:00:00Z", "filePath": "src/dashboard/components/Card.tsx" }
+  ],
+  "platform/src/dashboard/components/DataTable.tsx": [
+    { "name": "Priyanka Nair", "githubUsername": "priyankanair", "lastCommitDate": "2026-04-24T10:00:00Z", "filePath": "src/dashboard/components/DataTable.tsx" },
+    { "name": "Yemi Adeyemi", "githubUsername": "yemiadeyemi", "lastCommitDate": "2026-04-18T14:00:00Z", "filePath": "src/dashboard/components/DataTable.tsx" }
+  ],
+  "platform/src/dashboard/components/Chart.tsx": [
+    { "name": "Chloe Marchand", "githubUsername": "chloemarchand", "lastCommitDate": "2026-04-22T15:00:00Z", "filePath": "src/dashboard/components/Chart.tsx" },
+    { "name": "Priyanka Nair", "githubUsername": "priyankanair", "lastCommitDate": "2026-04-10T11:00:00Z", "filePath": "src/dashboard/components/Chart.tsx" }
+  ],
+  "platform/src/search/index.ts": [
+    { "name": "Devon Okafor", "githubUsername": "devonokafor", "lastCommitDate": "2026-04-22T13:45:00Z", "filePath": "src/search/index.ts" },
+    { "name": "Jordan Kim", "githubUsername": "jordankim", "lastCommitDate": "2026-04-19T10:15:00Z", "filePath": "src/search/index.ts" },
+    { "name": "Sasha Petrov", "githubUsername": "sasha-petrov", "lastCommitDate": "2026-04-05T09:00:00Z", "filePath": "src/search/index.ts" }
+  ],
+  "platform/src/search/elasticsearch.ts": [
+    { "name": "Devon Okafor", "githubUsername": "devonokafor", "lastCommitDate": "2026-04-23T14:00:00Z", "filePath": "src/search/elasticsearch.ts" },
+    { "name": "Ben Hartley", "githubUsername": "benhartley", "lastCommitDate": "2026-04-12T10:00:00Z", "filePath": "src/search/elasticsearch.ts" }
+  ],
+  "platform/src/websocket/server.ts": [
+    { "name": "Rosa Delgado", "githubUsername": "rosadelgado", "lastCommitDate": "2026-04-24T09:00:00Z", "filePath": "src/websocket/server.ts" },
+    { "name": "Marcus Webb", "githubUsername": "marcuswebb", "lastCommitDate": "2026-04-20T14:00:00Z", "filePath": "src/websocket/server.ts" },
+    { "name": "Alex Rivera", "githubUsername": "alexrivera", "lastCommitDate": "2026-04-15T11:00:00Z", "filePath": "src/websocket/server.ts" }
+  ],
+  "platform/src/websocket/reconnect.ts": [
+    { "name": "Rosa Delgado", "githubUsername": "rosadelgado", "lastCommitDate": "2026-04-23T16:00:00Z", "filePath": "src/websocket/reconnect.ts" },
+    { "name": "Sasha Petrov", "githubUsername": "sasha-petrov", "lastCommitDate": "2026-04-18T10:00:00Z", "filePath": "src/websocket/reconnect.ts" }
+  ],
+  "platform/src/pipeline/consumer.ts": [
+    { "name": "Ben Hartley", "githubUsername": "benhartley", "lastCommitDate": "2026-04-21T11:00:00Z", "filePath": "src/pipeline/consumer.ts" },
+    { "name": "Marcus Webb", "githubUsername": "marcuswebb", "lastCommitDate": "2026-04-08T09:00:00Z", "filePath": "src/pipeline/consumer.ts" }
+  ],
+  "platform/src/pipeline/balance.ts": [
+    { "name": "Ben Hartley", "githubUsername": "benhartley", "lastCommitDate": "2026-04-22T14:00:00Z", "filePath": "src/pipeline/balance.ts" },
+    { "name": "Rosa Delgado", "githubUsername": "rosadelgado", "lastCommitDate": "2026-04-10T10:00:00Z", "filePath": "src/pipeline/balance.ts" }
+  ],
+  "platform/src/analytics/export.ts": [
+    { "name": "Yemi Adeyemi", "githubUsername": "yemiadeyemi", "lastCommitDate": "2026-04-24T11:00:00Z", "filePath": "src/analytics/export.ts" },
+    { "name": "Chloe Marchand", "githubUsername": "chloemarchand", "lastCommitDate": "2026-04-16T14:00:00Z", "filePath": "src/analytics/export.ts" }
+  ],
+  "platform/src/analytics/dashboard.ts": [
+    { "name": "Chloe Marchand", "githubUsername": "chloemarchand", "lastCommitDate": "2026-04-23T13:00:00Z", "filePath": "src/analytics/dashboard.ts" },
+    { "name": "Yemi Adeyemi", "githubUsername": "yemiadeyemi", "lastCommitDate": "2026-04-20T10:00:00Z", "filePath": "src/analytics/dashboard.ts" },
+    { "name": "Lina Osei", "githubUsername": "linaosei", "lastCommitDate": "2026-04-01T09:00:00Z", "filePath": "src/analytics/dashboard.ts" }
+  ],
+  "platform/src/db/migrations/0042_add_cursor_pagination.ts": [
+    { "name": "Devon Okafor", "githubUsername": "devonokafor", "lastCommitDate": "2026-04-24T08:00:00Z", "filePath": "src/db/migrations/0042_add_cursor_pagination.ts" }
+  ],
+  "platform/src/db/schema.ts": [
+    { "name": "Marcus Webb", "githubUsername": "marcuswebb", "lastCommitDate": "2026-04-15T10:00:00Z", "filePath": "src/db/schema.ts" },
+    { "name": "Devon Okafor", "githubUsername": "devonokafor", "lastCommitDate": "2026-04-10T14:00:00Z", "filePath": "src/db/schema.ts" },
+    { "name": "Sasha Petrov", "githubUsername": "sasha-petrov", "lastCommitDate": "2026-03-20T11:00:00Z", "filePath": "src/db/schema.ts" }
+  ],
+  "design-system/src/components/Icon.tsx": [
+    { "name": "Tai Nguyen", "githubUsername": "tainguyen", "lastCommitDate": "2026-04-24T14:00:00Z", "filePath": "src/components/Icon.tsx" },
+    { "name": "Priyanka Nair", "githubUsername": "priyankanair", "lastCommitDate": "2026-04-12T10:00:00Z", "filePath": "src/components/Icon.tsx" }
+  ],
+  "design-system/src/components/Form.tsx": [
+    { "name": "Priyanka Nair", "githubUsername": "priyankanair", "lastCommitDate": "2026-04-24T16:00:00Z", "filePath": "src/components/Form.tsx" },
+    { "name": "Tai Nguyen", "githubUsername": "tainguyen", "lastCommitDate": "2026-04-20T11:00:00Z", "filePath": "src/components/Form.tsx" }
+  ],
+  "infra/kubernetes/platform-api.yaml": [
+    { "name": "Marcus Webb", "githubUsername": "marcuswebb", "lastCommitDate": "2026-04-18T09:00:00Z", "filePath": "kubernetes/platform-api.yaml" },
+    { "name": "Rosa Delgado", "githubUsername": "rosadelgado", "lastCommitDate": "2026-04-05T10:00:00Z", "filePath": "kubernetes/platform-api.yaml" }
   ]
 }

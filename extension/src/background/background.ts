@@ -1,3 +1,6 @@
+// Open side panel when toolbar icon is clicked
+chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
+
 // Create 14-day check-in reminder alarm
 chrome.alarms.create('checkin-reminder', { periodInMinutes: 20160 });
 
@@ -23,7 +26,6 @@ chrome.runtime.onMessage.addListener((msg: { type: string }) => {
     chrome.storage.local.remove(['afloat_followup_flag']);
   }
   if (msg.type === 'SET_FOLLOWUP_ALARM') {
-    // Set 48-hour followup alarm
     chrome.alarms.create('checkin-followup', { delayInMinutes: 2880 });
   }
 });

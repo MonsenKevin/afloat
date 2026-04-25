@@ -36,6 +36,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   logout: () => {
     chrome.storage.local.remove(['afloat_token', 'afloat_user']);
     set({ token: null, user: null, error: null });
+    // Chat messages are per-user keyed, no need to clear them
   },
 
   restoreSession: async () => {

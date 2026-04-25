@@ -123,6 +123,27 @@ export default function RoutingCard({ routing, sentimentScore }: Props) {
                 <KBAnswerCard key={i} answer={a} />
               ))}
             </div>
+            {/* Source chips — parse citation strings into chips */}
+            {routing.kbAnswers.some(a => a.citation) && (
+              <div style={{ marginTop: 8 }}>
+                <p style={{ fontSize: 11, fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>Sources</p>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                  {routing.kbAnswers.filter(a => a.citation).map((a, i) => {
+                    const parts = a.citation.split(' > ');
+                    const title = parts[0] || a.citation;
+                    const section = parts.slice(1).join(' > ');
+                    return (
+                      <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 20, padding: '3px 10px', fontSize: 11, color: '#15803d', fontWeight: 500 }}>
+                        <svg style={{ width: 10, height: 10 }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        {title}{section ? ` › ${section}` : ''}
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         )}
 

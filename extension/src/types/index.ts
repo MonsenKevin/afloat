@@ -73,3 +73,16 @@ export interface ClassificationResult {
   implicatedValues: string[];
   summary: string;
 }
+
+export interface PeerReview {
+  id: string;
+  reviewerId: string;
+  subjectId: string;
+  subjectName: string;
+  status: string;
+  questions: string[];
+  responses: string[] | null;
+  managerNotes: string | null;
+  createdAt: string;
+}
+

@@ -4,7 +4,6 @@
   "version": "1.0.0",
   "description": "AI-powered onboarding co-pilot",
   "action": {
-    "default_popup": "src/popup/index.html",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",
@@ -18,7 +17,7 @@
     "service_worker": "src/background/background.js",
     "type": "module"
   },
-  "permissions": ["storage", "alarms", "sidePanel", "activeTab"],
+  "permissions": ["storage", "alarms", "sidePanel", "activeTab", "windows"],
   "host_permissions": ["http://localhost:3001/*"],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'"

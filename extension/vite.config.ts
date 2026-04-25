@@ -23,6 +23,12 @@ function copyExtensionFiles() {
       // Write a compiled JS version of the background script
       const bgContent = `
 // Afloat background service worker
+// Open side panel when toolbar icon is clicked
+chrome.action.onClicked.addListener((tab) => {
+  chrome.sidePanel.open({ windowId: tab.windowId });
+});
+
+// Create 14-day check-in reminder alarm
 chrome.alarms.create('checkin-reminder', { periodInMinutes: 20160 });
 
 chrome.alarms.onAlarm.addListener((alarm) => {

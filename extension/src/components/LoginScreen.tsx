@@ -1,10 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuthStore } from '../store/authStore';
+
+const STORAGE_KEY = 'afloat_saved_email';
 
 export default function LoginScreen() {
   const { login, isLoading, error } = useAuthStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  // Restore saved email on mount
+  useEffect(() => {
+    chrome.storage.local.get([STORAGE_KEY], (result) => {
+      if (result[STORAGE_KEY]) {
+        setEmail(result[STORAGE_KEY] as string);
+      }
+    });
+  }, []);
+
+  // Persist email whenever it changes
+  const handleEmailChange = (val: string) => {
+    setEmail(val);
+    chrome.storage.local.set({ [STORAGE_KEY]: val });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,7 +59,7 @@ export default function LoginScreen() {
             autoComplete="email"
             required
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => handleEmailChange(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
             placeholder="you@company.com"
           />
