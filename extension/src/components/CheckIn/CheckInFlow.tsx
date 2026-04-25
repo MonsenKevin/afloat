@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useCheckinStore } from '../../store/checkinStore';
 import { PeerReview } from '../../types/index';
 import RoutingCard from './RoutingCard';
+import WelcomeScreen from './WelcomeScreen';
 
 const SLIDER_LABELS = ['Not at all', 'Rarely', 'Sometimes', 'Often', 'Always'];
 const DRAFT_KEY = 'afloat_checkin_draft';
@@ -293,12 +294,21 @@ function PeerReviewFlow({ review, onDone }: { review: PeerReview; onDone: () => 
 }
 
 // ── Main ──────────────────────────────────────────────────────────────────────
-export default function CheckInFlow() {
+interface CheckInFlowProps {
+  firstName?: string;
+  userName?: string;
+  userEmail?: string;
+  onAskAnything?: () => void;
+  onLogout?: () => void;
+}
+
+export default function CheckInFlow({ firstName = 'there', userName, userEmail, onAskAnything, onLogout }: CheckInFlowProps) {
   const { pendingCheckin, routingResult, isSubmitting, submitResponses, submittedScore, pendingPeerReviews, fetchPeerReviews } =
     useCheckinStore();
 
   const [activePeerReview, setActivePeerReview] = useState<PeerReview | null>(null);
   const [dismissedPeerReviews, setDismissedPeerReviews] = useState<Set<string>>(new Set());
+  const [started, setStarted] = useState(false);
 
   // Self-fetch on mount in case the store hasn't loaded yet (e.g. initial login)
   useEffect(() => {
@@ -417,6 +427,21 @@ export default function CheckInFlow() {
       <PeerReviewFlow
         review={activePeerReview}
         onDone={() => setActivePeerReview(null)}
+      />
+    );
+  }
+
+  // Show the welcome screen before the user starts the check-in
+  if (!started) {
+    return (
+      <WelcomeScreen
+        firstName={firstName}
+        userName={userName}
+        userEmail={userEmail}
+        onCheckIn={() => setStarted(true)}
+        onAskAnything={() => onAskAnything?.()}
+        onLogout={() => onLogout?.()}
+        hasPendingCheckin={true}
       />
     );
   }
